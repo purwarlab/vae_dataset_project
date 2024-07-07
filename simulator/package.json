@@ -1,0 +1,31 @@
+{
+  "name": "simulation-server",
+  "version": "1.0.0",
+  "description": "server that runs motiongen simulation algorithm",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel --presets es2015 -d lib/ src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deshpandeshrinath/simulation-server.git"
+  },
+  "author": "Prerna Kothari, Shrinath Deshpande, and Anshul Lodha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/deshpandeshrinath/simulation-server/issues"
+  },
+  "homepage": "https://github.com/deshpandeshrinath/simulation-server#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "global": "^4.4.0",
+    "immutable": "^4.0.0-rc.12",
+    "mathjs": "^12.4.1"
+  }
+}
