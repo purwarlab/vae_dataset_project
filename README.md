@@ -10,7 +10,6 @@ This repository contains the implementation of a Variational Autoencoder (VAE) f
 - [Usage](#usage)
 - [Project Structure](#project-structure)
 - [Results](#results)
-- [License](#license)
 
 ## Introduction
 
@@ -32,4 +31,43 @@ Variational Autoencoders (VAEs) are generative models that learn the underlying 
    ```bash
    git clone https://github.com/yourusername/vae-project.git
    cd vae-project
+
+2. Install dependencies:
+
+    pip install -r requirements.txt
+
+## Usage
+
+## Project Structure
+
+vae-project/
+│
+├── dataset.py                              # Contains the SingleDataset class
+├── vae.py                                  # Contains the VAE model definition
+├── train.py                                # Script for training the VAE
+├── plotting_2D_latent_space.py             # Script for visualizing latent space
+├── weights/                                # Directory to save/load model checkpoints
+│   └── lat_1.ckpt                          # 1D VAE checkpoint file
+│   └── lat_2.ckpt                          # 2D VAE checkpoint file
+│   └── lat_5.ckpt                          # 4D VAE checkpoint file
+│   └── lat_10.ckpt                         # 10D VAE checkpoint file
+│   └── lat_25.ckpt                         # 25D VAE checkpoint file
+│   └── lat_50.ckpt                         # 50D VAE checkpoint file
+├── requirements.txt                        # Required Python packages
+├── image-to-z-4bar.ipynb                   # Converting 4-bar CC images to their latent representation
+├── image-to-z-6bar.ipynb                   # Converting 6-bar CC images to their latent representation
+├── image-to-z-8bar.ipynb                   # Converting 8-bar CC images to their latent representation
+├── BSIdict_468.json                        # File that contains the information about the kinematic structure of our mechs
+├── KV_468.json                             # File carrying info about our mechs and their enumeration
+├── VK_468.json                             # File carrying info about our mechs and their enumeration
+├── metrics.py                              # Metric calculation of Chamfer and Ordered distances
+├── normalize.py                            # Script for normalization process
+├── path_decomposition.py                   # Simulation file
+├── server.py                               # Headless server file
+├── simulator/                              # Headless server folder
+├── headless_main_accuracy.py               # Calculating accuracy results for the test dataset
+├── headless_main_novelty.py                # Calculating novelty results for the test dataset
+└── README.md                               # Project readme file
+
+## Results
 
