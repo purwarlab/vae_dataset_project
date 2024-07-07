@@ -42,32 +42,32 @@ Variational Autoencoders (VAEs) are generative models that learn the underlying 
 
 vae-project/
 │
-├── dataset.py                              # Contains the SingleDataset class
-├── vae.py                                  # Contains the VAE model definition
-├── train.py                                # Script for training the VAE
-├── plotting_2D_latent_space.py             # Script for visualizing latent space
-├── weights/                                # Directory to save/load model checkpoints
-│   └── lat_1.ckpt                          # 1D VAE checkpoint file
-│   └── lat_2.ckpt                          # 2D VAE checkpoint file
-│   └── lat_5.ckpt                          # 4D VAE checkpoint file
-│   └── lat_10.ckpt                         # 10D VAE checkpoint file
-│   └── lat_25.ckpt                         # 25D VAE checkpoint file
-│   └── lat_50.ckpt                         # 50D VAE checkpoint file
-├── requirements.txt                        # Required Python packages
-├── image-to-z-4bar.ipynb                   # Converting 4-bar CC images to their latent representation
-├── image-to-z-6bar.ipynb                   # Converting 6-bar CC images to their latent representation
-├── image-to-z-8bar.ipynb                   # Converting 8-bar CC images to their latent representation
-├── BSIdict_468.json                        # File that contains the information about the kinematic structure of our mechs
-├── KV_468.json                             # File carrying info about our mechs and their enumeration
-├── VK_468.json                             # File carrying info about our mechs and their enumeration
-├── metrics.py                              # Metric calculation of Chamfer and Ordered distances
-├── normalize.py                            # Script for normalization process
-├── path_decomposition.py                   # Simulation file
-├── server.py                               # Headless server file
-├── simulator/                              # Headless server folder
-├── headless_main_accuracy.py               # Calculating accuracy results for the test dataset
-├── headless_main_novelty.py                # Calculating novelty results for the test dataset
-└── README.md                               # Project readme file
+├── dataset.py # Defines SingleDataset class
+├── vae.py # Defines VAE model
+├── train.py # VAE training script
+├── plotting_2D_latent_space.py # Visualizes 2D latent space
+├── weights/ # Directory for model checkpoints
+│ ├── lat_1.ckpt # Checkpoint for 1D VAE
+│ ├── lat_2.ckpt # Checkpoint for 2D VAE
+│ ├── lat_5.ckpt # Checkpoint for 4D VAE
+│ ├── lat_10.ckpt # Checkpoint for 10D VAE
+│ ├── lat_25.ckpt # Checkpoint for 25D VAE
+│ └── lat_50.ckpt # Checkpoint for 50D VAE
+├── requirements.txt # Python package dependencies
+├── image-to-z-4bar.ipynb # Converts 4-bar CC images to latent representation
+├── image-to-z-6bar.ipynb # Converts 6-bar CC images to latent representation
+├── image-to-z-8bar.ipynb # Converts 8-bar CC images to latent representation
+├── BSIdict_468.json # Kinematic structure information for mechs
+├── KV_468.json # Mech information with enumeration
+├── VK_468.json # Mech information with enumeration
+├── metrics.py # Calculates Chamfer and Ordered distances
+├── normalize.py # Normalization script
+├── path_decomposition.py # Simulation file for path decomposition
+├── server.py # Headless server script
+├── simulator/ # Headless server folder
+│ └── headless_main_accuracy.py # Calculates accuracy for test dataset
+│ └── headless_main_novelty.py # Calculates novelty for test dataset
+└── README.md # Project readme file
 
 ## Results
 
