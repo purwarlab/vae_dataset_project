@@ -69,5 +69,5 @@ vae-project/
 │ └── headless_main_novelty.py # Calculates novelty for test dataset
 └── README.md # Project readme file
 
-## Results
+<!-- ## Results -->
 
