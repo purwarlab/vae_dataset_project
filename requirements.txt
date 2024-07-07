@@ -1,0 +1,9 @@
+numpy
+glob2
+tqdm
+torch
+opencv-python
+json
+pytorch-lightning
+wandb
+torchvision

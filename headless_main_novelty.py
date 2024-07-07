@@ -1,7 +1,8 @@
 import numpy as np
 from datasetProcess import getMech, stackMechs, getBSI
-from normalize import normalize_data_122223
+from normalize import normalize_data_122223, matmul_jd
 from sklearn.neighbors import KDTree
+import json 
 import torch
 from vae import VAE
 import cv2
@@ -9,10 +10,10 @@ from PIL import Image
 import os
 import bezier
 from server import main as server_main
-from pathlib import Path
 from server import main_8bar as server_main_8bar
-from metrics import batch_chamfer_distance, batch_ordered_distance
-
+from metrics import batch_chamfer_distance
+import matplotlib.pyplot as plt
+import os
 
 def decode(mechErrors, bigZ_indices, list_indices, original_indices, param1):
     solutions = []
@@ -43,10 +44,10 @@ model = VAE(latent_dim)
 model.load_state_dict(checkpoint['state_dict'])
 model = model.to(device)
 model.eval()
-knn = 25
+knn = 500
 
-def query(img_name):
-    global results
+def query(img_name=None):
+    # img_name = '2.011 5.802 -6.261 -7.036 -4.587 9.323 -1.316 7.382 -2.644 2.41 RRRR -0.315 0.649 -3.209 0.649 0.315 0.928 0. 0. 1. .jpg'
 
     matImg = cv2.imread(img_name, cv2.IMREAD_GRAYSCALE) / 255
 
@@ -88,6 +89,9 @@ def query(img_name):
         _, ref_points, success = server_main_8bar(floats_before.tolist(), bsi['B'])
     else:
         _, ref_points, success = server_main(floats_before.tolist(), mechType, bsi['c'].index(1))
+    
+    mechs = {}
+    mechs_count = {}
 
     if success: 
         ref_points = np.array(ref_points)
@@ -111,10 +115,6 @@ def query(img_name):
         result = decode(mechErrors, bigZ_indices, list_indices, original_indices, param1)
         
         try:
-            cdt = 0
-            odt = 0
-            total_mechs = 0
-
             ref_points, _, _ = normalize_data_122223(ref_points)
             ref_points_shape = ref_points.shape[0]
 
@@ -140,35 +140,75 @@ def query(img_name):
                     p_tensor = torch.tensor(p_array)  # Convert to tensor
 
                     cd = batch_chamfer_distance(ref_points_tensor, p_tensor.unsqueeze(0))
-                    od = batch_ordered_distance(ref_points_tensor, p_tensor.unsqueeze(0))
 
-                    cdt += cd.item()
-                    odt += od.item()
+                if cd is None:
+                    continue
 
-                    total_mechs += 1
+                if cd < 0.20:
+                    if res['mech'] in mechs.keys():
+                        mechs[res['mech']].append(res['p'])
+                        mechs_count[res['mech']] += 1
+                    else:
+                        mechs[res['mech']] = [res['p']]
+                        mechs_count[res['mech']] = 1
 
-            try:
-                results.append((cdt/total_mechs, odt/total_mechs))
-            except Exception as e:
-                print("An error occurred:", e)
-        
-        except Exception as e:
-            print("An error occurred:", e)
+                else:
+                    continue
+        except:
+            pass
 
-results = []
+    novel_mechs = {}
 
-for images in os.listdir('testing'):
+    for key in mechs:
+        mechanisms = mechs[key]
+        to_remove = set()
+        n = len(mechanisms)
+
+        for i in range(n):
+            if i in to_remove:
+                continue
+            for j in range(i + 1, n):
+                if j in to_remove:
+                    continue
+                diff = l2_difference(mechanisms[i], mechanisms[j])
+                if diff < 10:
+                    to_remove.add(j)
+
+        filtered_mechanisms = [mech for idx, mech in enumerate(mechanisms) if idx not in to_remove]
+
+        novel_mechs[key] = filtered_mechanisms
+    
+    for key in novel_mechs:
+        if key in global_novel_mechs:
+            global_novel_mechs[key] += len(novel_mechs[key])
+        else:
+            global_novel_mechs[key] = len(novel_mechs[key])
+
+def l2_difference(joints1, joints2):
+    return np.sqrt(np.sum((np.asarray(joints1) - np.asarray(joints2)) ** 2, axis=1)).mean()
+
+global_novel_mechs = {}
+
+for images in os.listdir('testing')[:100]:
     images = os.path.join('testing', images)
     query(images)
 
-# Initialize sums
-sum_first_values = 0
-sum_second_values = 0
+sorted_results = dict(sorted(global_novel_mechs.items(), key=lambda item: item[1]))
 
-# Iterate through the array and add the values separately
-for value1, value2 in results:
-    sum_first_values += value1
-    sum_second_values += value2
+mechanisms = list(global_novel_mechs.keys())
+frequencies = list(global_novel_mechs.values())
 
-print(f"Sum of first values: {sum_first_values/len(results)}")
-print(f"Sum of second values: {sum_second_values/len(results)}")
+# Plotting the bar chart
+plt.figure(figsize=(15, 10))
+plt.bar(mechanisms, frequencies, color='skyblue')
+plt.xlabel('Mechanism Types')
+plt.ylabel('Frequencies')
+plt.title('Frequency of Each Mechanism Type')
+plt.xticks(rotation=90)  # Rotate x-axis labels for better readability
+plt.tight_layout()  # Adjust layout to make room for the rotated x labels
+plt.savefig('mechanism_frequencies.png')
+plt.show()
+
+print(sorted_results)
+print(len(global_novel_mechs))
+print(sum(global_novel_mechs.values()))

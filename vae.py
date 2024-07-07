@@ -74,7 +74,7 @@ class Decoder(nn.Module):
         return self.inverse_conv_stack(x)
 
 class VAE(pl.LightningModule):
-    def __init__(self, latent_dim: int, batch_size: int):
+    def __init__(self, latent_dim: int, batch_size: int=1024):
         super().__init__()
         self.latent_dim = latent_dim
         self.batch_size = batch_size
